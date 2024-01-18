@@ -10,10 +10,7 @@ class SaudacaoUtilTest {
     @Test
     void saudarBomDia() {
         int horaValida = 9;
-        //String saudacaoBomDia = SaudacaoUtil.saudar(9);
         String saudacaoBomDia = saudar(horaValida);
-        //Assertions.assertTrue(saudacaoBomDia.equals("Bom dia"));
-        //Assertions.assertEquals("Bom dia", saudacaoBomDia);
         assertEquals("Bom dia", saudacaoBomDia);
     }
 

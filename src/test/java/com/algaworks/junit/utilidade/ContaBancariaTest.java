@@ -87,7 +87,7 @@ class ContaBancariaTest {
     }
 
     @Test
-    void criarContaComSaldoNullFalha() {
+    void criarContaSaldoNullFalha() {
         assertThrows(IllegalArgumentException.class, ()-> new ContaBancaria(null));
     }
 }

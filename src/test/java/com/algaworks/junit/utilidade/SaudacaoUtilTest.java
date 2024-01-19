@@ -1,14 +1,17 @@
 package com.algaworks.junit.utilidade;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import static com.algaworks.junit.utilidade.SaudacaoUtil.saudar;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Testes no utilitário de saudação.")
 class SaudacaoUtilTest {
 
     @Test
+    @DisplayName("Deve saudar com bom dia.")
     void saudarBomDia() {
         int horaValida = 9;
         String saudacaoBomDia = saudar(horaValida);
@@ -31,14 +34,9 @@ class SaudacaoUtilTest {
 
     @Test
     void deveLancarException() {
-        //Arrange
         int horaInvalida = -10;
-
-        //Act
         Executable chamadaInvalidaDeMetodo = () -> saudar(horaInvalida);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, chamadaInvalidaDeMetodo);
-
-        //Assert
         assertEquals("Hora invalida", exception.getMessage());
     }
 

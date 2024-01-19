@@ -9,8 +9,6 @@ import java.time.Duration;
 class SimuladorEsperaTest {
 
     @Test
-    //desabilita o teste
-    @Disabled("Não é mais aplicável.")
     void deveEsperarENaoDarTimeout() {
         Assertions.assertTimeoutPreemptively(Duration.ofSeconds(1), () -> SimuladorEspera.esperar(Duration.ofMillis(10)));
     }

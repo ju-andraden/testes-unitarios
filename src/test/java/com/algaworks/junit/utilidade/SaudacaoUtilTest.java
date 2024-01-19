@@ -7,11 +7,9 @@ import org.junit.jupiter.api.function.Executable;
 import static com.algaworks.junit.utilidade.SaudacaoUtil.saudar;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Testes no utilitário de saudação.")
 class SaudacaoUtilTest {
 
     @Test
-    @DisplayName("Deve saudar com bom dia.")
     void saudarBomDia() {
         int horaValida = 9;
         String saudacaoBomDia = saudar(horaValida);

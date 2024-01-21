@@ -27,8 +27,8 @@ public class ArmazenamentoEditorFixoEmMemoria implements ArmazenamentoEditor {
 
     @Override
     public Optional<Editor> encontrarPorEmail(String email) {
-        if (email.equals("alex.existe@email.com")) {
-            return Optional.of(new Editor(2L, "Alex", "alex.existe@email.com", BigDecimal.TEN, true));
+        if (email.equals("ju.existe@email.com")) {
+            return Optional.of(new Editor(2L, "Ju", "ju.existe@email.com", BigDecimal.TEN, true));
         }
         return Optional.empty();
     }

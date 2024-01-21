@@ -28,7 +28,7 @@ class CarrinhoCompraTest {
 
         @BeforeEach
         public void beforeEach() {
-            cliente = new Cliente(1L, "Alex Silva");
+            cliente = new Cliente(1L, "Ju");
 
             notebook = new Produto(1L, "Notebook", "Notebook", new BigDecimal(10));
             desktop = new Produto(2L, "Desktop", "Desktop", new BigDecimal("20.50"));
@@ -201,7 +201,7 @@ class CarrinhoCompraTest {
 
         @BeforeEach
         public void beforeEach() {
-            cliente = new Cliente(1L, "Alex Silva");
+            cliente = new Cliente(1L, "Ju");
 
             notebook = new Produto(1L, "Notebook", "Notebook", new BigDecimal(10));
             desktop = new Produto(2L, "Desktop", "Desktop", new BigDecimal("20.50"));

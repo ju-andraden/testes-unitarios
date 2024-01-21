@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class CadastroEditorTest {
+class CadastroEditorComStubTest {
 
     CadastroEditor cadastroEditor;
     ArmazenamentoEditorFixoEmMemoria armazenamentoEditor;
@@ -18,7 +18,7 @@ class CadastroEditorTest {
 
     @BeforeEach
     void beforeEach() {
-        editor = new Editor(null, "Alex", "alex@email.com", new BigDecimal(10), true);
+        editor = new Editor(null, "Ju", "ju@email.com", new BigDecimal(10), true);
 
         armazenamentoEditor = new ArmazenamentoEditorFixoEmMemoria();
 
@@ -48,13 +48,13 @@ class CadastroEditorTest {
 
     @Test
     void Dado_um_editor_com_email_existente_Quando_criar_Entao_deve_lancar_exception() {
-        editor.setEmail("alex.existe@email.com");
+        editor.setEmail("ju.existe@email.com");
         assertThrows(RegraNegocioException.class, ()-> cadastroEditor.criar(editor));
     }
 
     @Test
     void Dado_um_editor_com_email_existente_Quando_criar_Entao_nao_deve_salvar() {
-        editor.setEmail("alex.existe@email.com");
+        editor.setEmail("ju.existe@email.com");
         try {
             cadastroEditor.criar(editor);
         } catch (RegraNegocioException e) { }

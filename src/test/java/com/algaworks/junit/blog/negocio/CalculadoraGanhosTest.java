@@ -19,7 +19,7 @@ class CalculadoraGanhosTest {
 
     @BeforeAll
     static void beforeAll() {
-        calculadora = new CalculadoraGanhos(new ProcessadorTextoSimples(), BigDecimal.TEN);
+        calculadora = new CalculadoraGanhos(new ProcessadorTextoSimples(), new BigDecimal(10));
     }
 
     @BeforeEach

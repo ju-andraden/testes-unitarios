@@ -6,7 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 
 import java.math.BigDecimal;
@@ -14,8 +18,14 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@ExtendWith(MockitoExtension.class)
 public class CadastroEditorComMockTest {
 
+    @Mock
+    ArmazenamentoEditor armazenamentoEditor;
+    @Mock
+    GerenciadorEnvioEmail gerenciadorEnvioEmail;
+    @InjectMocks
     CadastroEditor cadastroEditor;
     Editor editor;
 
@@ -23,13 +33,8 @@ public class CadastroEditorComMockTest {
     void init() {
         editor = new Editor(null, "Ju", "ju@email.com", new BigDecimal(10), true);
 
-        ArmazenamentoEditor armazenamentoEditor = Mockito.mock(ArmazenamentoEditor.class);
         Mockito.when(armazenamentoEditor.salvar(editor))
                 .thenReturn(new Editor(1L, "Ju", "ju@email", new BigDecimal(10), true));
-
-        GerenciadorEnvioEmail gerenciadorEnvioEmail = Mockito.mock(GerenciadorEnvioEmail.class);
-
-        cadastroEditor = new CadastroEditor(armazenamentoEditor, gerenciadorEnvioEmail);
     }
 
     @Test

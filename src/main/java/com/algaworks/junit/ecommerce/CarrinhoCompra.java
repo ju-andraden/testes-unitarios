@@ -12,6 +12,7 @@ public class CarrinhoCompra {
 	private final List<ItemCarrinhoCompra> itens;
 
 	public CarrinhoCompra(Cliente cliente) {
+
 		this(cliente, new ArrayList<>());
 	}
 
@@ -23,51 +24,76 @@ public class CarrinhoCompra {
 	}
 
 	public List<ItemCarrinhoCompra> getItens() {
-		//TODO deve retornar uma nova lista para que a antiga não seja alterada
-		return null;
+		return new ArrayList<>(itens);
 	}
 
 	public Cliente getCliente() {
+
 		return cliente;
 	}
 
 	public void adicionarProduto(Produto produto, int quantidade) {
-		//TODO parâmetros não podem ser nulos, deve retornar uma exception
-		//TODO quantidade não pode ser menor que 1
-		//TODO deve incrementar a quantidade caso o produto já exista
+		Objects.requireNonNull(produto);
+		validaQuantidade(quantidade);
+
+		encontrarItemPeloProduto(produto).ifPresentOrElse(item -> item.adicionarQuantidade(quantidade),
+				() -> adicionarNovoItem(produto, quantidade));
 	}
 
 	public void removerProduto(Produto produto) {
-		//TODO parâmetro não pode ser nulo, deve retornar uma exception
-		//TODO caso o produto não exista, deve retornar uma exception
-		//TODO deve remover o produto independente da quantidade
+		Objects.requireNonNull(produto);
+		ItemCarrinhoCompra itemCarrinhoCompra = encontrarItemPeloProduto(produto).orElseThrow(RuntimeException::new);
+		this.itens.remove(itemCarrinhoCompra);
 	}
 
 	public void aumentarQuantidadeProduto(Produto produto) {
-		//TODO parâmetro não pode ser nulo, deve retornar uma exception
-		//TODO caso o produto não exista, deve retornar uma exception
-		//TODO deve aumentar em um quantidade do produto
+		Objects.requireNonNull(produto);
+		ItemCarrinhoCompra item = encontrarItemPeloProduto(produto).orElseThrow(RuntimeException::new);
+		item.adicionarQuantidade(1);
 	}
 
     public void diminuirQuantidadeProduto(Produto produto) {
-		//TODO parâmetro não pode ser nulo, deve retornar uma exception
-		//TODO caso o produto não exista, deve retornar uma exception
-		//TODO deve diminuir em um quantidade do produto, caso tenha apenas um produto, deve remover da lista
+		Objects.requireNonNull(produto);
+		ItemCarrinhoCompra item = encontrarItemPeloProduto(produto).orElseThrow(RuntimeException::new);
+		if (item.getQuantidade() == 1) {
+			itens.remove(item);
+		}
+		else {
+			item.subtrairQuantidade(1);
+		}
 	}
 
     public BigDecimal getValorTotal() {
-		//TODO implementar soma do valor total de todos itens
-		return null;
+		return this.itens.stream()
+				.map(ItemCarrinhoCompra::getValorTotal)
+				.reduce(new BigDecimal(0), BigDecimal::add);
     }
 
 	public int getQuantidadeTotalDeProdutos() {
-		//TODO retorna quantidade total de itens no carrinho
-		//TODO Exemplo em um carrinho com 2 itens, com a quantidade 2 e 3 para cada item respectivamente, deve retornar 5
-		return 0;
+		return this.itens.stream()
+				.map(ItemCarrinhoCompra::getQuantidade)
+				.reduce(0, Integer::sum);
 	}
 
 	public void esvaziar() {
-		//TODO deve remover todos os itens
+		this.itens.clear();
+	}
+
+	private void validaQuantidade(int quantidade) {
+		if (quantidade <= 0) {
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private void adicionarNovoItem(Produto produto, int quantidade) {
+		this.itens.add(new ItemCarrinhoCompra(produto, quantidade));
+	}
+
+	private Optional<ItemCarrinhoCompra> encontrarItemPeloProduto(Produto produto) {
+		return this.itens
+				.stream()
+				.filter(item -> item.getProduto().equals(produto))
+				.findFirst();
 	}
 
 	@Override

@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class CadastroEditorComMockTest {
 
+    @Spy
+    Editor editor = new Editor(null, "Ju", "ju@email.com", new BigDecimal(10), true);
     @Captor
     ArgumentCaptor<Mensagem> mensagemArgumentCaptor;
     @Mock
@@ -27,12 +29,9 @@ public class CadastroEditorComMockTest {
     GerenciadorEnvioEmail gerenciadorEnvioEmail;
     @InjectMocks
     CadastroEditor cadastroEditor;
-    Editor editor;
 
     @BeforeEach
     void init() {
-        editor = new Editor(null, "Ju", "ju@email.com", new BigDecimal(10), true);
-
         Mockito.when(armazenamentoEditor.salvar(Mockito.any(Editor.class)))
                 .thenAnswer(invocacao -> {
                    Editor editorPassado = invocacao.getArgument(0, Editor.class);
@@ -72,5 +71,11 @@ public class CadastroEditorComMockTest {
         Mensagem mensagem = mensagemArgumentCaptor.getValue();
 
         assertEquals(editorSalvo.getEmail(), mensagem.getDestinatario());
+    }
+
+    @Test
+    void Dado_um_editor_valido_Quando_cadastrar_Entao_deve_verificar_o_email() {
+        cadastroEditor.criar(editor);
+        Mockito.verify(editor, Mockito.atLeast(1)).getEmail();
     }
 }

@@ -7,17 +7,22 @@ import java.math.BigDecimal;
 public class EditorTestData {
 
     private EditorTestData() {
+
     }
 
-    public static Editor editorNovo() {
-        return new Editor(null, "Ju", "ju@email.com", BigDecimal.TEN, true);
+    public static Editor.Builder umEditorNovo() {
+        return Editor.builder()
+                .comNome("Ju")
+                .comEmail("ju@email.com")
+                .comValorPagoPorPalavra(BigDecimal.TEN)
+                .comPremium(true);
     }
 
-    public static Editor editorExistente() {
-        return new Editor(1L, "Ju", "ju@email.com", BigDecimal.TEN, true);
+    public static Editor.Builder umEditorExistente() {
+        return umEditorNovo().comId(1L);
     }
 
-    public static Editor editorComIdInexistente() {
-        return new Editor(99L, "Ju", "ju@email.com", BigDecimal.TEN, true);
+    public static Editor.Builder umEditorComIdInexistente() {
+        return umEditorNovo().comId(99L);
     }
 }

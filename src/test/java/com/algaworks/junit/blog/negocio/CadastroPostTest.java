@@ -6,18 +6,13 @@ import com.algaworks.junit.blog.modelo.Notificacao;
 import com.algaworks.junit.blog.modelo.Post;
 import com.algaworks.junit.blog.armazenamento.ArmazenamentoPost;
 import com.algaworks.junit.blog.utilidade.ConversorSlug;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @ExtendWith(MockitoExtension.class)
@@ -39,13 +34,13 @@ class CadastroPostTest {
     ArgumentCaptor<Notificacao> notificacaoArgumentCaptor;
 
     @Spy
-    Editor editor = new Editor(1L, "Ju", "ju@email.com", new BigDecimal(10), true);
+    Editor editor = EditorTestData.umEditorExistente().build();
 
     @Nested
     public final class Cadastro {
 
         @Spy
-        Post post = new Post("Olá mundo Java", "Olá Java com System.out.println", editor, true, true);
+        Post post = PostTestData.postNovo().build();
 
         @Test
         public void Dado_um_post_valido__Quanto_cadastrar__Entao_deve_salvar() {
@@ -72,7 +67,7 @@ class CadastroPostTest {
 
             Post postSalvo = cadastroPost.criar(post);
 
-            assertEquals(1L, postSalvo.getId());
+            Assertions.assertEquals(1L, postSalvo.getId());
         }
 
         @Test
@@ -85,12 +80,12 @@ class CadastroPostTest {
                     });
 
             Mockito.when(calculadoraGanhos.calcular(post))
-                    .thenReturn(new Ganhos(new BigDecimal(10), 4, new BigDecimal(40)));
+                    .thenReturn(new Ganhos(BigDecimal.TEN, 4, BigDecimal.valueOf(40)));
 
             Post postSalvo = cadastroPost.criar(post);
 
             Mockito.verify(post, Mockito.times(1)).setGanhos(Mockito.any(Ganhos.class));
-            assertNotNull(postSalvo.getGanhos());
+            Assertions.assertNotNull(postSalvo.getGanhos());
         }
 
         @Test
@@ -105,12 +100,12 @@ class CadastroPostTest {
             Post postSalvo = cadastroPost.criar(post);
 
             Mockito.verify(post, Mockito.times(1)).setSlug(Mockito.anyString());
-            assertNotNull(postSalvo.getSlug());
+            Assertions.assertNotNull(postSalvo.getSlug());
         }
 
         @Test
         public void Dado_um_post_null__Quanto_cadastrar__Entao_deve_lancar_exception_e_nao_deve_savar() {
-            assertThrows(NullPointerException.class, ()-> cadastroPost.criar(null));
+            Assertions.assertThrows(NullPointerException.class, () -> cadastroPost.criar(null));
             Mockito.verify(armazenamentoPost, Mockito.never()).salvar(Mockito.any(Post.class));
         }
 
@@ -179,7 +174,7 @@ class CadastroPostTest {
                     .enviar(notificacaoArgumentCaptor.capture());
 
             Notificacao notificacao = notificacaoArgumentCaptor.getValue();
-            assertEquals("Novo post criado -> " + post.getTitulo(), notificacao.getConteudo());
+            Assertions.assertEquals("Novo post criado -> " + post.getTitulo(), notificacao.getConteudo());
         }
     }
 
@@ -187,9 +182,7 @@ class CadastroPostTest {
     public final class Edicao {
 
         @Spy
-        Post post = new Post(1L, "Olá mundo Java", "Olá Java com System.out.println", editor,
-                "ola-mundo-java", new Ganhos(new BigDecimal(10), 4, new BigDecimal(10)),
-                true, true);
+        Post post = PostTestData.postExistente().build();
 
         @Test
         public void Dado_um_post_valido__Quando_editar__Entao_deve_salvar() {
@@ -210,7 +203,7 @@ class CadastroPostTest {
 
             Post postSalvo = cadastroPost.editar(post);
 
-            assertEquals(1L, postSalvo.getId());
+            Assertions.assertEquals(1L, postSalvo.getId());
         }
 
         @Test
@@ -224,14 +217,14 @@ class CadastroPostTest {
 
             Mockito.verify(post, Mockito.never()).setGanhos(Mockito.any(Ganhos.class));
             Mockito.verify(post, Mockito.times(1)).isPago();
-            assertNotNull(postSalvo.getGanhos());
+            Assertions.assertNotNull(postSalvo.getGanhos());
         }
 
         @Test
         public void Dado_um_post_nao_pago__Quando_editar__Entao_deve_retornar_recalcular_ganhos_antes_de_salvar() {
             post.setConteudo("Conteúdo editado");
             post.setPago(false);
-            Ganhos novoGanho = new Ganhos(new BigDecimal(10), 2, new BigDecimal(20));
+            Ganhos novoGanho = new Ganhos(BigDecimal.TEN, 2, BigDecimal.valueOf(20));
 
             Mockito.when(armazenamentoPost.salvar(Mockito.any(Post.class))).then(invocacao -> invocacao.getArgument(0, Post.class));
             Mockito.when(armazenamentoPost.encontrarPorId(1L)).thenReturn(Optional.ofNullable(post));
@@ -240,8 +233,8 @@ class CadastroPostTest {
             Post postSalvo = cadastroPost.editar(post);
 
             Mockito.verify(post, Mockito.times(1)).setGanhos(novoGanho);
-            assertNotNull(postSalvo.getGanhos());
-            assertEquals(novoGanho, postSalvo.getGanhos());
+            Assertions.assertNotNull(postSalvo.getGanhos());
+            Assertions.assertEquals(novoGanho, postSalvo.getGanhos());
 
             InOrder inOrder = Mockito.inOrder(calculadoraGanhos, armazenamentoPost);
             inOrder.verify(calculadoraGanhos, Mockito.times(1)).calcular(post);
@@ -251,25 +244,25 @@ class CadastroPostTest {
         @Test
         public void Dado_um_post_com_titulo_alterado__Quando_editar__Entao_deve_retornar_post_com_a_mesma_slug_sem_alterar() {
             post.setTitulo("Ola Teste");
-            Mockito.when(armazenamentoPost.salvar(Mockito.any(Post.class))).then(invocacao -> invocacao.getArgument(0, Post.class));
+            Mockito.when(armazenamentoPost.salvar(Mockito.any(Post.class))).then(invocacao ->
+                    invocacao.getArgument(0, Post.class));
             Mockito.when(armazenamentoPost.encontrarPorId(1L)).thenReturn(Optional.ofNullable(post));
 
             Post postSalvo = cadastroPost.editar(post);
 
             Mockito.verify(post, Mockito.never()).setSlug(Mockito.anyString());
-            assertEquals("ola-mundo-java", postSalvo.getSlug());
+            Assertions.assertEquals("ola-mundo-java", postSalvo.getSlug());
         }
 
         @Test
         public void Dado_um_post_null__Quando_editar__Entao_deve_lancar_exception_e_nao_deve_savar() {
-            assertThrows(NullPointerException.class, ()-> cadastroPost.editar(null));
+            Assertions.assertThrows(NullPointerException.class, () -> cadastroPost.editar(null));
             Mockito.verify(armazenamentoPost, Mockito.never()).salvar(Mockito.any(Post.class));
         }
 
         @Test
         public void Dado_um_post_valido__Quando_editar__Entao_deve_deve_alterar_post_salvo() {
-            Post postAlterado = new Post(1L, "Olá Java", "Olá Java", editor, "ola-mundo-java",
-                    new Ganhos(BigDecimal.TEN, 4, BigDecimal.valueOf(10)), true, true);
+            Post postAlterado = PostTestData.postExistente().build();
 
             Mockito.when(armazenamentoPost.salvar(Mockito.any(Post.class)))
                     .then(invocacao -> invocacao.getArgument(0, Post.class));

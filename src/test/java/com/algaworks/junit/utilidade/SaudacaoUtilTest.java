@@ -16,7 +16,12 @@ class SaudacaoUtilTest {
     @ValueSource(ints = {5, 6, 7, 8, 9, 10, 11})
     public void Dado_horario_matinal_Entao_deve_retornar_bom_dia(int hora) {
         String saudacaoBomDia = saudar(hora);
-        assertThat(saudacaoBomDia).isEqualTo("Bom dia");
+        String saudacaoCorreta = "Bom dia";
+
+        assertThat(saudacaoBomDia)
+                .as("Validando se a saudação é %s", saudacaoCorreta)
+                .withFailMessage("Erro: saudação incorreta! Resultado: %s", saudacaoBomDia)
+                .isEqualTo("Bom dia");
     }
 
     @ParameterizedTest

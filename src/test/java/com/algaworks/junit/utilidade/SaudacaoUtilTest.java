@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static com.algaworks.junit.utilidade.SaudacaoUtil.saudar;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SaudacaoUtilTest {
@@ -14,7 +15,7 @@ class SaudacaoUtilTest {
     @ValueSource(ints = {5, 6, 7, 8, 9, 10, 11})
     public void Dado_horario_matinal_Entao_deve_retornar_bom_dia(int hora) {
         String saudacaoBomDia = saudar(hora);
-        assertEquals("Bom dia", saudacaoBomDia);
+        assertThat(saudacaoBomDia).isEqualTo("Bom dia");
     }
 
     @ParameterizedTest

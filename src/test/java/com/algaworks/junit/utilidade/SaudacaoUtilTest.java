@@ -1,5 +1,6 @@
 package com.algaworks.junit.utilidade;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,10 +19,11 @@ class SaudacaoUtilTest {
         String saudacaoBomDia = saudar(hora);
         String saudacaoCorreta = "Bom dia";
 
-        assertThat(saudacaoBomDia)
-                .as("Validando se a saudação é %s", saudacaoCorreta)
-                .withFailMessage("Erro: saudação incorreta! Resultado: %s", saudacaoBomDia)
-                .isEqualTo("Bom dia");
+        Condition<String> bomDia = new Condition<>((string) -> string.equals(saudacaoCorreta),
+                "igual a %s",
+                saudacaoCorreta);
+
+        assertThat(saudacaoBomDia).is(bomDia);
     }
 
     @ParameterizedTest

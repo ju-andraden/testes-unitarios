@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static com.algaworks.junit.utilidade.SaudacaoUtil.saudar;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SaudacaoUtilTest {
@@ -32,13 +33,12 @@ class SaudacaoUtilTest {
         assertEquals("Boa noite", saudacaoBoaNoite);
     }
 
-
     @Test
     void deveLancarException() {
         int horaInvalida = -10;
-        Executable chamadaInvalidaDeMetodo = () -> saudar(horaInvalida);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, chamadaInvalidaDeMetodo);
-        assertEquals("Hora invalida", exception.getMessage());
+        assertThatThrownBy(() -> saudar(horaInvalida))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Hora invalida");
     }
 
     @Test

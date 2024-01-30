@@ -1,14 +1,12 @@
 package com.algaworks.junit.ecommerce;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -221,6 +219,15 @@ class CarrinhoCompraTest {
                 carrinhoCompra.adicionarProduto(notebook, 1);
                 carrinhoCompra.adicionarProduto(notebook, 1);
                 carrinhoCompra.adicionarProduto(desktop, 1);
+            }
+
+            @Test
+            @DisplayName("Então deve conter apenas produtos adicionados")
+            void entaoDeveConterApenasProdutosAdicionados() {
+                assertThat(carrinhoCompra.getItens())
+                        .flatMap(ItemCarrinhoCompra::getProduto)
+                        .contains(notebook, desktop)
+                        .doesNotContain(tablet);
             }
 
             @Test
